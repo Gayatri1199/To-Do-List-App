@@ -1,25 +1,64 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import ToDoList from "./todolist";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [inputList, setinputList] = useState("");
+  const [items, setItems] = useState([]);
+
+  const ItemEvent = (event) => {
+    setinputList(event.target.value);
+  };
+
+  const listofItems = () => {
+    setItems((oldItems) => {
+      return [...oldItems, inputList];
+    });
+    setinputList("");
+  };
+
+  const deleteItems = (id) => {
+    console.log("Delete Items has been clicked");
+    setItems((oldItems) => {
+      return oldItems.filter((arrElem, index) => {
+        return index !== id;
+      });
+    });
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="main-div">
+        <div className="center-div">
+          <h1>To Do List</h1>
+          <div className="form">
+            <input
+              type="text"
+              id="message"
+              name="message"
+              onChange={ItemEvent}
+              value={inputList}
+              placeholder="Add the Work"
+              required
+            />
+            <button onClick={listofItems}>+</button>
+          </div>
+
+          <ol>
+            {items.map((itemVal, index) => {
+              return (
+                <ToDoList
+                  text={itemVal}
+                  key={index}
+                  id={index}
+                  onSelect={deleteItems}
+                />
+              );
+            })}
+          </ol>
+        </div>
+      </div>
+    </>
   );
-}
+};
 
 export default App;
